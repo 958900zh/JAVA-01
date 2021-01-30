@@ -1,8 +1,7 @@
 package io.github.kimmking.gateway.outbound.httpclient4;
 
-import io.github.kimmking.gateway.filter.HttpResponseFilterChain;
+import io.github.kimmking.gateway.filter.response.HttpResponseFilterChain;
 import io.github.kimmking.gateway.router.HttpEndpointRouter;
-import io.github.kimmking.gateway.router.RandomHttpEndpointRouter;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
@@ -19,13 +18,11 @@ import org.apache.http.impl.nio.reactor.IOReactorConfig;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
-import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 import static io.netty.handler.codec.http.HttpResponseStatus.NO_CONTENT;
 import static io.netty.handler.codec.http.HttpResponseStatus.OK;
@@ -33,16 +30,14 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 
 public class HttpOutboundHandler {
 
-    private CloseableHttpAsyncClient httpclient;
-    private ExecutorService proxyService;
-    private List<String> backendUrls;
+    private final CloseableHttpAsyncClient httpclient;
+    private final ExecutorService proxyService;
 
     HttpResponseFilterChain filterChain = new HttpResponseFilterChain();
-    HttpEndpointRouter router = new RandomHttpEndpointRouter();
+    HttpEndpointRouter router;
 
-    public HttpOutboundHandler(List<String> backends) {
-
-        this.backendUrls = backends.stream().map(this::formatUrl).collect(Collectors.toList());
+    public HttpOutboundHandler(HttpEndpointRouter router) {
+        this.router = router;
 
         int cores = Runtime.getRuntime().availableProcessors();
         long keepAliveTime = 1000;
@@ -67,12 +62,8 @@ public class HttpOutboundHandler {
         httpclient.start();
     }
 
-    private String formatUrl(String backend) {
-        return backend.endsWith("/") ? backend.substring(0, backend.length() - 1) : backend;
-    }
-
     public void handle(final FullHttpRequest fullRequest, final ChannelHandlerContext ctx) {
-        String backendUrl = router.route(this.backendUrls);
+        String backendUrl = router.route();
         final String url = backendUrl + fullRequest.uri();
         proxyService.submit(() -> fetchGet(fullRequest, ctx, url));
     }

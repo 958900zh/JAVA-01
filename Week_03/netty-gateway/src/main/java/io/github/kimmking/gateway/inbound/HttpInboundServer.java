@@ -1,5 +1,7 @@
 package io.github.kimmking.gateway.inbound;
 
+import io.github.kimmking.gateway.config.ProxyProperties;
+import io.github.kimmking.gateway.config.ServerConfiguration;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.Channel;
@@ -20,12 +22,9 @@ import java.util.List;
 public class HttpInboundServer {
 
     private int port;
-    
-    private List<String> proxyServers;
 
-    public HttpInboundServer(int port, List<String> proxyServers) {
-        this.port=port;
-        this.proxyServers = proxyServers;
+    public HttpInboundServer(int port) {
+        this.port = port;
     }
 
     public void run() throws Exception {
@@ -47,7 +46,7 @@ public class HttpInboundServer {
 
             b.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class)
                     .handler(new LoggingHandler(LogLevel.DEBUG))
-                    .childHandler(new HttpInboundInitializer(this.proxyServers));
+                    .childHandler(new HttpInboundInitializer());
 
             Channel ch = b.bind(port).sync().channel();
             System.out.println("开启netty http服务器，监听地址和端口为 http://127.0.0.1:" + port + '/');

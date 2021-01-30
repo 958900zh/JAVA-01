@@ -1,4 +1,4 @@
-package io.github.kimmking.gateway.filter;
+package io.github.kimmking.gateway.filter.response;
 
 import io.github.kimmking.gateway.inbound.HttpInboundHandler;
 import io.netty.handler.codec.http.FullHttpResponse;

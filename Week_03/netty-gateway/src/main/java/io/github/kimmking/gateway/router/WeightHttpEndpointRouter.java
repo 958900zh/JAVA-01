@@ -8,10 +8,10 @@ import java.util.List;
  * @create: 2021-01-27
  **/
 
-public class WeightHttpEndpointRouter implements HttpEndpointRouter {
+public class WeightHttpEndpointRouter extends HttpEndpointRouter {
 
     @Override
-    public String route(List<String> endpoints) {
+    public String route() {
         return null;
     }
 }

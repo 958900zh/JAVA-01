@@ -1,4 +1,4 @@
-package io.github.kimmking.gateway.filter;
+package io.github.kimmking.gateway.filter.request;
 
 import io.github.kimmking.gateway.inbound.HttpInboundHandler;
 import io.netty.channel.ChannelHandlerContext;

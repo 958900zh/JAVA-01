@@ -1,7 +1,10 @@
 package io.github.kimmking.gateway.router;
 
+import io.github.kimmking.gateway.config.ProxyProperties;
+
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 /**
  * @program: JavaCourseCodes
@@ -9,12 +12,16 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @create: 2021-01-27
  **/
 
-public class RoundRibbonHttpEndpointRouter implements HttpEndpointRouter {
+@Activate
+public class RoundRibbonHttpEndpointRouter extends HttpEndpointRouter {
 
-    private AtomicInteger count = new AtomicInteger();
+    private final AtomicInteger count = new AtomicInteger();
 
     @Override
-    public String route(List<String> endpoints) {
-        return endpoints.get(count.incrementAndGet() % endpoints.size());
+    public String route() {
+        List<String> urls = this.getProxyProperties().stream()
+                .map(ProxyProperties::getHost)
+                .collect(Collectors.toList());
+        return urls.get(count.incrementAndGet() % urls.size());
     }
 }

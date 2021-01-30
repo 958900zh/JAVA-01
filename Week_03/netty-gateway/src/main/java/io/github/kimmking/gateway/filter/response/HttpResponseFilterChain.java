@@ -1,7 +1,5 @@
-package io.github.kimmking.gateway.filter;
+package io.github.kimmking.gateway.filter.response;
 
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.FullHttpResponse;
 import org.reflections.Reflections;
 
@@ -17,10 +15,10 @@ import java.util.Set;
 
 public class HttpResponseFilterChain {
 
-    private List<HttpResponseFilter> filters = new ArrayList<>();
+    private final List<HttpResponseFilter> filters = new ArrayList<>();
 
     public HttpResponseFilterChain() {
-        Reflections reflections = new Reflections(HttpRequestFilter.class.getPackage().getName());
+        Reflections reflections = new Reflections(HttpResponseFilter.class.getPackage().getName());
         Set<Class<? extends HttpResponseFilter>> classes = reflections.getSubTypesOf(HttpResponseFilter.class);
 
         for (Class<? extends HttpResponseFilter> clazz : classes) {

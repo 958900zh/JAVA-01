@@ -1,17 +1,22 @@
 package io.github.kimmking.gateway.router;
 
+import io.github.kimmking.gateway.config.ProxyProperties;
+import io.github.kimmking.gateway.config.ServerConfiguration;
+
 import java.util.List;
 
-public interface HttpEndpointRouter {
-    
-    String route(List<String> endpoints);
-    
-    // Load Balance
-    // Random
-    // RoundRibbon 
-    // Weight
-    // - server01,20
-    // - server02,30
-    // - server03,50
-    
+public abstract class HttpEndpointRouter {
+
+    private final List<ProxyProperties> proxyProperties;
+
+    public HttpEndpointRouter() {
+        this.proxyProperties = ServerConfiguration.getInstance().getProxyList();
+    }
+
+    public abstract String route();
+
+    protected List<ProxyProperties> getProxyProperties() {
+        return proxyProperties;
+    }
+
 }
