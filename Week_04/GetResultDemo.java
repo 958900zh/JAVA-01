@@ -212,8 +212,8 @@ public class GetResultDemo {
     private static void demo12() throws ExecutionException, InterruptedException {
         CompletableFuture
                 .runAsync(GetResultDemo::getResult)
-                .thenRun(() -> System.out.println(Thread.currentThread().getName() + " : " + result))
                 .get();
+        System.out.println(Thread.currentThread().getName() + " : " + result);
     }
 
     /**
