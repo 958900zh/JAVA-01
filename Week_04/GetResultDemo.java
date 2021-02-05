@@ -24,6 +24,10 @@ public class GetResultDemo {
 
     static int result = 0;
 
+    public static void main(String[] args) throws InterruptedException {
+        demo7();
+    }
+
     /**
      * FutureTask
      */
@@ -132,23 +136,12 @@ public class GetResultDemo {
     private static void demo7() throws InterruptedException {
         Semaphore semaphore = new Semaphore(1);
         new Thread(() -> {
-            try {
-                semaphore.acquire();
-                getResult();
-                semaphore.release();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            getResult();
+            semaphore.release(2);
         }).start();
 
-        while (true) {
-            if (semaphore.availablePermits() == 0) {
-                semaphore.acquire();
-                System.out.println(Thread.currentThread().getName() + " : " + result);
-                semaphore.release();
-                break;
-            }
-        }
+        semaphore.acquire(2);
+        System.out.println(Thread.currentThread().getName() + " : " + result);
     }
 
     /**
@@ -278,6 +271,19 @@ public class GetResultDemo {
         System.out.println(Thread.currentThread().getName() + " : " + result);
         inputStream.close();
         outputStream.close();
+    }
+
+    /**
+     * Thread auto notifyAll
+     */
+    private static void demo16() throws InterruptedException {
+        Thread thread = new Thread(GetResultDemo::getResult);
+        thread.start();
+
+        synchronized (thread) {
+            thread.wait();
+            System.out.println(Thread.currentThread().getName() + " : " + result);
+        }
     }
 
     private static void getResult() {
