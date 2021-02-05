@@ -7,6 +7,7 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 public class RandomHttpEndpointRouter extends HttpEndpointRouter {
+
     @Override
     public String route() {
         List<String> urls = this.getProxyProperties().stream()
