@@ -8,6 +8,7 @@
       <sourceFolder url="file://$MODULE_DIR$/Week_05/SpringBeanLoad/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Week_05/SpringBeanLoad/src/main/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/Week_05/jdbc/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Week_07" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
